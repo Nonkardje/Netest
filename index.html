@@ -9,6 +9,8 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        /* Smooth scroll behavior */
+        html { scroll-behavior: smooth; }
         .option-btn.selected {
             background-color: #eff6ff; /* blue-50 */
             border-color: #3b82f6; /* blue-500 */
@@ -23,23 +25,28 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col font-sans">
 
-    <header class="bg-white py-4 shadow-sm">
-        <div class="container mx-auto px-4 max-w-3xl flex justify-between items-center">
-             <div class="flex items-center gap-2">
+    <header class="bg-white py-3 shadow-sm sticky top-0 z-50 transition-all" id="main-header">
+        <div class="container mx-auto px-4 max-w-3xl flex items-center justify-between">
+             
+            <button id="header-back-btn" onclick="prevQuestion()" class="hidden mr-3 p-2 text-slate-500 hover:text-blue-600 transition-colors rounded-full hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-300" aria-label="Retour à la question précédente">
+                <i class="fas fa-arrow-left text-lg"></i>
+            </button>
+
+             <div class="flex items-center gap-2 flex-grow">
                 <span class="bg-blue-100 text-blue-600 p-2 rounded-lg">
                     <i class="fas fa-shield-alt"></i>
                 </span>
-                <h1 class="font-bold text-slate-700">CyberBalance Project</h1>
+                <h1 class="font-bold text-slate-700 truncate">CyberBalance Project</h1>
             </div>
-             <div class="text-xs font-medium text-slate-400 bg-slate-50 py-1 px-3 rounded-full">Protocole IAT Standardisé</div>
+             <div class="hidden sm:block text-xs font-medium text-slate-400 bg-slate-50 py-1 px-3 rounded-full whitespace-nowrap">Protocole IAT Standardisé</div>
         </div>
     </header>
 
-    <main class="flex-grow container mx-auto px-4 py-8 max-w-2xl flex flex-col justify-center">
+    <main class="flex-grow container mx-auto px-4 py-8 pt-6 max-w-2xl flex flex-col justify-center md:justify-start">
         
-        <div id="welcome-screen" class="bg-white rounded-3xl shadow-xl p-8 md:p-12 text-center fade-in border border-slate-200">
+        <div id="welcome-screen" class="bg-white rounded-3xl shadow-xl p-8 md:p-12 text-center fade-in border border-slate-200 my-auto">
             <div class="mb-8">
-               <svg class="w-40 h-40 mx-auto text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <svg class="w-32 h-32 md:w-40 md:h-40 mx-auto text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M7.5 17L12 12L7.5 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M16.5 17L12 12L16.5 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -47,27 +54,27 @@
                 <path d="M2 12H22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-            <h2 class="text-3xl font-extrabold mb-4 text-slate-900">Votre relation au numérique est-elle équilibrée ?</h2>
+            <h2 class="text-2xl md:text-3xl font-extrabold mb-4 text-slate-900">Votre relation au numérique est-elle équilibrée ?</h2>
             <p class="text-slate-600 mb-8 leading-relaxed text-lg">
-                Ce test psychométrique (IAT) est l'outil de référence mondial pour évaluer objectivement l'impact d'Internet sur votre vie quotidienne, professionnelle et sociale.
+                Ce test psychométrique (IAT) est l'outil de référence mondial pour évaluer objectivement l'impact d'Internet sur votre vie quotidienne.
             </p>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 text-left text-sm">
-                <div class="flex items-start gap-3 bg-slate-50 p-4 rounded-xl">
+                <div class="flex items-center md:items-start gap-3 bg-slate-50 p-4 rounded-xl">
                     <i class="fas fa-lock text-blue-500 mt-1"></i>
-                    <div><strong>100% Privé</strong><br>Aucune donnée n'est enregistrée. Le calcul est local.</div>
+                    <div><strong>100% Privé</strong><br><span class="hidden md:inline">Calcul local.</span></div>
                 </div>
-                <div class="flex items-start gap-3 bg-slate-50 p-4 rounded-xl">
+                <div class="flex items-center md:items-start gap-3 bg-slate-50 p-4 rounded-xl">
                     <i class="fas fa-clock text-blue-500 mt-1"></i>
-                    <div><strong>Rapide</strong><br>20 questions simples. Environ 3 minutes.</div>
+                    <div><strong>Rapide</strong><br><span class="hidden md:inline">~3 minutes.</span></div>
                 </div>
-                <div class="flex items-start gap-3 bg-slate-50 p-4 rounded-xl">
-                    <i class="fas fa-stethoscope text-blue-500 mt-1"></i>
-                    <div><strong>Fiable</strong><br>Basé sur les travaux du Dr. Kimberly Young.</div>
+                <div class="flex items-center md:items-start gap-3 bg-slate-50 p-4 rounded-xl">
+                    <i class="fas fa-check-circle text-blue-500 mt-1"></i>
+                    <div><strong>Fiable</strong><br><span class="hidden md:inline">Échelle reconnue.</span></div>
                 </div>
             </div>
 
-            <button onclick="startTest()" class="group relative inline-flex items-center justify-start overflow-hidden rounded-full bg-blue-600 px-8 py-4 font-bold text-white transition-all hover:bg-blue-700 mx-auto">
+            <button onclick="startTest()" class="group relative inline-flex items-center justify-start overflow-hidden rounded-full bg-blue-600 px-8 py-4 font-bold text-white transition-all hover:bg-blue-700 mx-auto shadow-lg hover:shadow-xl">
                 <span class="absolute right-0 translate-x-full transition-transform group-hover:-translate-x-4">
                   <i class="fas fa-arrow-right"></i>
                 </span>
@@ -75,73 +82,83 @@
             </button>
         </div>
 
-        <div id="quiz-container" class="hidden">
-            <div class="mb-4 flex justify-between items-center text-sm font-bold text-slate-500">
-                <span id="progress-text">Progression</span>
-                <span id="progress-percent">0%</span>
-            </div>
-            <div class="h-3 w-full bg-slate-200 rounded-full mb-8 overflow-hidden">
-                <div id="progress-bar" class="h-full bg-blue-600 transition-all duration-300 ease-out" style="width: 0%"></div>
+        <div id="quiz-container" class="hidden mt-4 md:mt-0">
+            <div class="bg-white rounded-2xl shadow-sm p-4 mb-6 border border-slate-100 sticky top-20 z-40 md:static">
+                 <div class="flex justify-between items-center text-sm font-bold text-slate-500 mb-3">
+                    <span id="progress-text">Progression</span>
+                    <span id="progress-percent" class="text-blue-600">0%</span>
+                </div>
+                <div class="h-3 w-full bg-slate-100 rounded-full overflow-hidden relative">
+                    <div id="progress-bar" class="h-full bg-blue-600 transition-all duration-500 ease-out relative" style="width: 0%">
+                        <div class="absolute right-0 top-0 h-full w-full bg-white opacity-30 animate-pulse"></div>
+                    </div>
+                </div>
             </div>
 
             <div id="questions-wrapper"></div>
             
-            <div class="mt-8 flex justify-between items-center">
-                <button id="prev-btn" onclick="prevQuestion()" class="text-slate-500 hover:text-slate-800 font-bold px-6 py-3 hidden rounded-full hover:bg-slate-200 transition-colors">
-                    ← Précédent
+            <div class="mt-8 flex flex-col-reverse md:flex-row justify-between items-center gap-4 md:gap-0">
+                <button id="prev-btn" onclick="prevQuestion()" class="w-full md:w-auto text-slate-500 hover:text-slate-800 font-bold px-6 py-4 hidden rounded-full bg-white border-2 border-slate-200 hover:border-slate-300 transition-colors flex items-center justify-center gap-2 order-2 md:order-1">
+                    <i class="fas fa-arrow-left"></i> Précédent
                 </button>
-                <button id="next-btn" onclick="nextQuestion()" class="bg-slate-900 hover:bg-black text-white font-bold py-4 px-10 rounded-full shadow-lg ml-auto transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none">
-                    Question suivante
-                </button>
-                <button id="finish-btn" onclick="calculateResult()" class="hidden bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold py-4 px-10 rounded-full shadow-xl ml-auto transition-all transform hover:scale-105">
-                    Obtenir mon analyse
-                </button>
+                
+                <div class="w-full md:w-auto ml-auto order-1 md:order-2">
+                     <button id="next-btn" onclick="nextQuestion()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex items-center justify-center gap-3">
+                        Question suivante <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button id="finish-btn" onclick="calculateResult()" class="hidden w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold py-4 px-10 rounded-full shadow-xl transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 animate-bounce-subtle">
+                        Obtenir mon analyse <i class="fas fa-check-circle"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div id="result-screen" class="hidden fade-in bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200">
-            <div id="result-header-bg" class="p-10 text-center relative overflow-hidden">
+        <div id="result-screen" class="hidden fade-in bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 my-8">
+            <div id="result-header-bg" class="p-8 md:p-10 text-center relative overflow-hidden transition-colors duration-1000">
                 <div id="result-illustration-container" class="mb-6 relative z-10 flex justify-center">
                     </div>
                 
-                <h2 class="text-2xl font-bold text-slate-800 opacity-80 mb-2 uppercase tracking-wider">Votre Résultat IAT</h2>
-                <div class="flex items-center justify-center gap-4 mb-2 relative z-10">
-                    <span class="text-7xl font-extrabold text-slate-900" id="final-score">0</span>
-                    <span class="text-3xl text-slate-500 font-light">/ 100</span>
+                <h2 class="text-xl md:text-2xl font-bold text-slate-800 opacity-80 mb-2 uppercase tracking-wider">Votre Résultat IAT</h2>
+                <div class="flex items-baseline justify-center gap-2 mb-4 relative z-10">
+                    <span class="text-6xl md:text-8xl font-black text-slate-900 leading-none" id="final-score">0</span>
+                    <span class="text-2xl md:text-4xl text-slate-600 font-medium">/100</span>
                 </div>
-                <div class="text-3xl font-black text-white px-6 py-2 inline-block rounded-lg shadow-sm relative z-10" id="result-category-badge">
+                <div id="result-category-badge-container" class="relative z-10">
                     </div>
             </div>
             
-            <div class="p-10 bg-white relative z-20">
+            <div class="p-6 md:p-10 bg-white relative z-20">
                 <div class="mb-10">
                     <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center">
-                        <span class="bg-slate-100 p-2 rounded mr-3">📊</span> Analyse Détaillée
+                        <span class="inline-flex items-center justify-center w-10 h-10 bg-slate-100 text-slate-600 rounded-full mr-3 shadow-sm">
+                            <i class="fas fa-chart-bar"></i>
+                        </span> 
+                        Analyse Détaillée
                     </h3>
-                    <div id="result-description" class="text-slate-700 leading-relaxed space-y-4 text-lg border-l-4 pl-6 py-2"></div>
+                    <div id="result-description" class="text-slate-700 leading-relaxed space-y-5 text-lg border-l-4 pl-6 py-2 transition-all duration-500"></div>
                 </div>
 
-                <div class="mb-12">
-                    <div class="flex justify-between text-xs text-slate-500 font-bold mb-2 uppercase tracking-wider">
-                        <span>Contrôle (0)</span>
-                        <span>Risque Élevé (100)</span>
-                    </div>
-                    <div class="relative h-6 bg-slate-100 rounded-full overflow-hidden shadow-inner border border-slate-200">
-                        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 opacity-20"></div>
-                        <div id="score-bar" class="absolute top-0 left-0 h-full transition-all duration-1500 ease-out rounded-full relative z-10 shadow-sm" style="width: 0%">
-                             <div class="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full border-2 border-slate-400 shadow"></div>
+                <div class="mb-12 bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                     <h4 class="font-bold text-slate-700 mb-4 text-sm uppercase tracking-wider text-center">Positionnement sur l'échelle IAT</h4>
+                    <div class="relative h-8 bg-slate-200 rounded-full overflow-hidden shadow-inner border border-slate-300 mb-3">
+                        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-[#22c55e] via-[#eab308] via-[#f97316] to-[#dc2626] opacity-80"></div>
+                        <div id="score-marker-container" class="absolute top-0 left-0 h-full w-full pr-4 pointer-events-none transition-all duration-1500 ease-out" style="width: 0%">
+                             <div class="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+                                 <div class="w-5 h-5 bg-white rounded-full border-[3px] border-slate-800 shadow-lg relative z-10"></div>
+                                 <div class="w-0.5 h-4 bg-slate-800 mt-[-2px]"></div>
+                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-between text-xs text-slate-400 font-medium mt-2 px-2">
-                        <span class="flex-1 text-left">Normal (0-30)</span>
-                        <span class="flex-1 text-center">Léger (31-49)</span>
-                        <span class="flex-1 text-center">Modéré (50-79)</span>
-                        <span class="flex-1 text-right">Sévère (80-100)</span>
+                    <div class="grid grid-cols-4 text-[10px] md:text-xs text-slate-500 font-semibold text-center leading-tight">
+                        <span class="text-green-600">Normal<br>(0-30)</span>
+                        <span class="text-yellow-600">Léger<br>(31-49)</span>
+                        <span class="text-orange-600">Modéré<br>(50-79)</span>
+                        <span class="text-red-600">Sévère<br>(80-100)</span>
                     </div>
                 </div>
 
                 <div class="pt-8 border-t border-slate-100 flex flex-col sm:flex-row gap-4">
-                    <button onclick="location.reload()" class="flex-1 py-4 px-6 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-colors text-center flex items-center justify-center gap-2">
+                    <button onclick="location.reload()" class="flex-1 py-4 px-6 bg-white border-2 border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700 rounded-xl font-bold transition-colors text-center flex items-center justify-center gap-2">
                         <i class="fas fa-redo"></i> Refaire le test
                     </button>
                     <button onclick="shareResult()" class="flex-1 py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all text-center shadow-md hover:shadow-lg flex items-center justify-center gap-2">
@@ -153,9 +170,9 @@
 
     </main>
 
-    <footer class="text-center py-8 text-slate-500 text-sm bg-white border-t border-slate-200 mt-auto">
-        <p>© CyberBalance Project. Basé sur l'échelle IAT du Dr. Kimberly S. Young.</p>
-        <p class="mt-2 text-xs">Cet outil est fourni à titre informatif et ne remplace pas un diagnostic médical.</p>
+    <footer class="text-center py-8 text-slate-500 text-sm bg-white border-t border-slate-200 mt-auto relative z-10">
+        <p class="font-semibold">© CyberBalance Project</p>
+        <p class="mt-2 text-xs opacity-75 max-w-md mx-auto px-4">Basé sur les travaux du Dr. Kimberly S. Young. Cet outil est informatif et ne remplace pas un avis médical.</p>
     </footer>
 
     <script>
@@ -192,24 +209,28 @@
             { val: 5, text: "Toujours" }
         ];
 
-        // --- SVGs DES RÉSULTATS ---
+        // --- SVGs DES RÉSULTATS (Optimized) ---
         const resultSVGs = {
-            green: `<svg class="result-svg text-green-500" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="90" fill="#DCFCE7" stroke="currentColor" stroke-width="4"/><path d="M100 40V160" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path d="M40 100H160" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="100" cy="100" r="30" fill="currentColor"/><path d="M100 130C116.569 130 130 116.569 130 100C130 83.4315 116.569 70 100 70C83.4315 70 70 83.4315 70 100C70 116.569 83.4315 130 100 130Z" fill="white"/><path d="M70 80C50 60 50 40 70 20" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M130 80C150 60 150 40 130 20" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg>`,
-            yellow: `<svg class="result-svg text-yellow-500" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 10C50.2944 10 10 50.2944 10 100C10 149.706 50.2944 190 100 190C149.706 190 149.706 149.706 190 100C190 50.2944 149.706 10 100 10Z" fill="#FEF9C3" stroke="currentColor" stroke-width="4"/><path d="M100 50V100L140 140" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><rect x="40" y="120" width="40" height="60" rx="8" fill="currentColor" stroke="currentColor" stroke-width="4"/><path d="M50 130H70" stroke="white" stroke-width="4" stroke-linecap="round"/></svg>`,
-            orange: `<svg class="result-svg text-orange-500" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="40" width="160" height="120" rx="12" fill="#FFEDD5" stroke="currentColor" stroke-width="8"/><path d="M80 160V180H120V160" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path d="M40 180H160" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path d="M60 20L80 40" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path d="M140 20L120 40" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="100" cy="100" r="30" stroke="currentColor" stroke-width="8"/><path d="M125 115L155 145" stroke="currentColor" stroke-width="12" stroke-linecap="round"/><path d="M145 115L115 145" stroke="currentColor" stroke-width="12" stroke-linecap="round"/></svg>`,
-            red: `<svg class="result-svg text-red-600" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 20C60 20 20 60 20 100C20 140 60 180 100 180C140 180 180 140 180 100C180 60 140 20 100 20Z" fill="#FEE2E2" stroke="currentColor" stroke-width="4"/><path d="M60 70C70 90 90 90 100 110C110 130 130 130 140 150" stroke="currentColor" stroke-width="10" stroke-linecap="round"/><path d="M140 70C130 90 110 90 100 110C90 130 70 130 60 150" stroke="currentColor" stroke-width="10" stroke-linecap="round"/><circle cx="100" cy="110" r="20" fill="currentColor"/><path d="M90 40L110 60" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M110 40L90 60" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M20 100H40" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M160 100H180" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg>`
+            green: `<svg class="result-svg text-green-500 drop-shadow-lg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="90" fill="#DCFCE7" stroke="currentColor" stroke-width="4"/><path d="M100 40V160" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path d="M40 100H160" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="100" cy="100" r="30" fill="currentColor"/><path d="M100 130C116.569 130 130 116.569 130 100C130 83.4315 116.569 70 100 70C83.4315 70 70 83.4315 70 100C70 116.569 83.4315 130 100 130Z" fill="white"/><path d="M70 80C50 60 50 40 70 20" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M130 80C150 60 150 40 130 20" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg>`,
+            yellow: `<svg class="result-svg text-yellow-500 drop-shadow-lg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 10C50.2944 10 10 50.2944 10 100C10 149.706 50.2944 190 100 190C149.706 190 149.706 149.706 190 100C190 50.2944 149.706 10 100 10Z" fill="#FEF9C3" stroke="currentColor" stroke-width="4"/><path d="M100 50V100L140 140" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><rect x="40" y="120" width="40" height="60" rx="8" fill="currentColor" stroke="currentColor" stroke-width="4"/><path d="M50 130H70" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="170" cy="30" r="15" fill="#ef4444" class="animate-ping"/><circle cx="170" cy="30" r="8" fill="#ef4444"/></svg>`,
+            orange: `<svg class="result-svg text-orange-500 drop-shadow-lg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="40" width="160" height="120" rx="12" fill="#FFEDD5" stroke="currentColor" stroke-width="8"/><path d="M80 160V180H120V160" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path d="M40 180H160" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path d="M60 20L80 40" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path d="M140 20L120 40" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="100" cy="100" r="30" stroke="currentColor" stroke-width="8"/><path d="M85 85L65 65" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path d="M115 85L135 65" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path d="M125 115L155 145" stroke="currentColor" stroke-width="12" stroke-linecap="round"/><path d="M145 115L115 145" stroke="currentColor" stroke-width="12" stroke-linecap="round"/></svg>`,
+            red: `<svg class="result-svg text-red-600 drop-shadow-lg animate-pulse-subtle" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 20C60 20 20 60 20 100C20 140 60 180 100 180C140 180 180 140 180 100C180 60 140 20 100 20Z" fill="#FEE2E2" stroke="currentColor" stroke-width="4"/><path d="M60 70C70 90 90 90 100 110C110 130 130 130 140 150" stroke="currentColor" stroke-width="10" stroke-linecap="round"/><path d="M140 70C130 90 110 90 100 110C90 130 70 130 60 150" stroke="currentColor" stroke-width="10" stroke-linecap="round"/><circle cx="100" cy="110" r="20" fill="currentColor"/><path d="M90 40L110 60" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M110 40L90 60" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M20 100H40" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M160 100H180" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M100 160V180" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M100 20V40" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg>`
         };
 
         // --- LOGIQUE DU TEST ---
         let currentQuestion = 0;
         let answers = new Array(questions.length).fill(null);
+        const headerBackBtn = document.getElementById('header-back-btn'); // Référence au nouveau bouton
+        const mainHeader = document.getElementById('main-header');
 
         function startTest() {
             document.getElementById('welcome-screen').classList.add('hidden');
             document.getElementById('quiz-container').classList.remove('hidden');
+            // Petit effet sur le header au démarrage
+            mainHeader.classList.add('shadow-md');
             renderQuestion();
             updateProgress();
-            window.scrollTo(0, 0);
+            scrollToTop();
         }
 
         function renderQuestion() {
@@ -217,57 +238,68 @@
             wrapper.innerHTML = '';
 
             const qDiv = document.createElement('div');
-            qDiv.className = 'bg-white rounded-3xl shadow-lg p-6 md:p-10 fade-in border border-slate-100';
+            qDiv.className = 'bg-white rounded-[2rem] shadow-xl p-6 md:p-10 fade-in border border-slate-100 relative overflow-hidden';
             
+            // Decorative background element
+            const deco = document.createElement('div');
+            deco.className = 'absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-blue-50 rounded-full opacity-50 pointer-events-none';
+            qDiv.appendChild(deco);
+
             // Question Number Badge
-            const badge = document.createElement('div');
-            badge.className = 'inline-block bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wider';
-            badge.innerText = `Question ${currentQuestion + 1}`;
-            qDiv.appendChild(badge);
+            const badgeContainer = document.createElement('div');
+            badgeContainer.className = 'flex items-center mb-6';
+            const badge = document.createElement('span');
+            badge.className = 'inline-flex items-center justify-center bg-blue-100 text-blue-800 text-xs font-extrabold px-4 py-2 rounded-full uppercase tracking-widest shadow-sm';
+            badge.innerHTML = `<i class="far fa-question-circle mr-2"></i> Question ${currentQuestion + 1}`;
+            badgeContainer.appendChild(badge);
+            qDiv.appendChild(badgeContainer);
 
             const qTitle = document.createElement('h3');
-            qTitle.className = 'text-xl md:text-2xl font-extrabold text-slate-800 mb-8 leading-tight';
+            qTitle.className = 'text-xl md:text-2xl font-extrabold text-slate-800 mb-8 leading-tight relative z-10';
             qTitle.innerText = questions[currentQuestion];
             qDiv.appendChild(qTitle);
 
             const optionsGrid = document.createElement('div');
-            optionsGrid.className = 'grid grid-cols-1 gap-4';
+            optionsGrid.className = 'grid grid-cols-1 gap-4 relative z-10';
 
             options.forEach(opt => {
                 const btn = document.createElement('button');
                 const isSelected = answers[currentQuestion] === opt.val;
                 // Improved button styling for professionalism
-                btn.className = `option-btn group w-full text-left p-4 rounded-xl border-2 border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all flex items-center relative overflow-hidden ${isSelected ? 'selected shadow-md' : ''}`;
+                btn.className = `option-btn group w-full text-left p-3 md:p-4 rounded-2xl border-2 border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-all flex items-center relative overflow-hidden ${isSelected ? 'selected shadow-md ring-2 ring-blue-200 ring-offset-2' : 'shadow-sm'}`;
                 btn.onclick = () => selectOption(opt.val, btn);
                 
                 // 1. The Number Badge (First item)
                 const valSpan = document.createElement('span');
-                // Base style for the number badge
-                let badgeClass = 'flex-shrink-0 w-10 h-10 mr-4 rounded-full font-extrabold text-lg flex items-center justify-center transition-colors ';
-                // Conditional style based on selection
+                let badgeClass = 'flex-shrink-0 w-10 h-10 md:w-12 md:h-12 mr-4 rounded-full font-extrabold text-lg md:text-xl flex items-center justify-center transition-all duration-300 shadow-sm ';
                 if (isSelected) {
-                    badgeClass += 'bg-blue-600 text-white';
+                    badgeClass += 'bg-gradient-to-br from-blue-500 to-blue-600 text-white scale-110';
                 } else {
-                    badgeClass += 'bg-slate-100 text-slate-500 group-hover:bg-blue-100 group-hover:text-blue-600';
+                    badgeClass += 'bg-white text-slate-500 group-hover:bg-blue-100 group-hover:text-blue-600 group-hover:scale-105 border border-slate-100';
                 }
                 valSpan.className = badgeClass;
                 valSpan.innerText = opt.val;
 
                 // 2. The Text (Second item)
                 const textSpan = document.createElement('span');
-                textSpan.className = 'font-bold text-lg text-slate-700 group-hover:text-blue-900 flex-grow text-left';
+                textSpan.className = `font-bold text-base md:text-lg flex-grow text-left transition-colors ${isSelected ? 'text-blue-900' : 'text-slate-700 group-hover:text-blue-800'}`;
                 textSpan.innerText = opt.text;
 
                 // 3. The Indicators (Third item - pushed right)
                 const scaleIndicator = document.createElement('div');
-                scaleIndicator.className = 'hidden sm:flex space-x-1 ml-4';
+                scaleIndicator.className = 'hidden sm:flex space-x-1.5 ml-4 p-2 bg-white/50 rounded-full backdrop-blur-sm';
                 for(let i=0; i<5; i++) {
                     const dot = document.createElement('div');
-                    dot.className = `w-3 h-3 rounded-full transition-colors ${i < opt.val ? (isSelected ? 'bg-blue-500' : 'bg-slate-300 group-hover:bg-blue-300') : 'bg-slate-100'}`;
+                    let dotClass = 'w-2.5 h-2.5 rounded-full transition-all duration-300 ';
+                    if (i < opt.val) {
+                         dotClass += isSelected ? 'bg-blue-500 scale-110' : 'bg-blue-200 group-hover:bg-blue-300';
+                    } else {
+                         dotClass += 'bg-slate-200';
+                    }
+                    dot.className = dotClass;
                     scaleIndicator.appendChild(dot);
                 }
                 
-                // Order of elements inside the button
                 btn.appendChild(valSpan);
                 btn.appendChild(textSpan);
                 btn.appendChild(scaleIndicator);
@@ -290,8 +322,9 @@
                     nextQuestion();
                 } else {
                     updateButtons();
+                    scrollToBottomBtn();
                 }
-            }, 400);
+            }, 350);
         }
 
         function nextQuestion() {
@@ -300,7 +333,7 @@
                 currentQuestion++;
                 renderQuestion();
                 updateProgress();
-                window.scrollTo(0, 0);
+                scrollToTop();
             }
         }
 
@@ -309,16 +342,21 @@
                 currentQuestion--;
                 renderQuestion();
                 updateProgress();
-                 window.scrollTo(0, 0);
+                scrollToTop();
             }
         }
 
         function updateButtons() {
-            const prevBtn = document.getElementById('prev-btn');
+            const prevBtnBottom = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
             const finishBtn = document.getElementById('finish-btn');
 
-            prevBtn.classList.toggle('hidden', currentQuestion === 0);
+            // Logique pour afficher/cacher les boutons "Précédent" (Haut et Bas)
+            const isFirstQuestion = currentQuestion === 0;
+            prevBtnBottom.classList.toggle('hidden', isFirstQuestion);
+            // Le bouton du header suit la même logique
+            headerBackBtn.classList.toggle('hidden', isFirstQuestion);
+
 
             if (currentQuestion === questions.length - 1) {
                 nextBtn.classList.add('hidden');
@@ -326,9 +364,11 @@
                  if (answers[currentQuestion] === null) {
                      finishBtn.disabled = true;
                      finishBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                     finishBtn.classList.remove('animate-bounce-subtle');
                  } else {
                       finishBtn.disabled = false;
                      finishBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                     finishBtn.classList.add('animate-bounce-subtle');
                  }
             } else {
                 nextBtn.classList.remove('hidden');
@@ -336,6 +376,7 @@
                 nextBtn.disabled = answers[currentQuestion] === null;
                 nextBtn.classList.toggle('opacity-50', answers[currentQuestion] === null);
                 nextBtn.classList.toggle('cursor-not-allowed', answers[currentQuestion] === null);
+                 finishBtn.classList.remove('animate-bounce-subtle');
             }
         }
 
@@ -343,7 +384,14 @@
             const percent = Math.round(((currentQuestion) / questions.length) * 100);
             document.getElementById('progress-bar').style.width = `${percent}%`;
             document.getElementById('progress-percent').innerText = `${percent}%`;
-             document.getElementById('progress-text').innerText = `Question ${currentQuestion + 1} sur ${questions.length}`;
+             document.getElementById('progress-text').innerText = `Question ${currentQuestion + 1} / ${questions.length}`;
+        }
+
+        function scrollToTop() {
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function scrollToBottomBtn() {
+             document.getElementById('finish-btn')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
 
@@ -354,95 +402,139 @@
             const totalScore = answers.reduce((a, b) => a + b, 0);
             
             document.getElementById('quiz-container').classList.add('hidden');
-            document.querySelector('header').style.display = 'none';
+            // On cache le bouton retour du header sur la page de résultats
+            headerBackBtn.classList.add('hidden');
+            mainHeader.classList.remove('shadow-md', 'py-3');
+            mainHeader.classList.add('py-2');
+
             document.getElementById('result-screen').classList.remove('hidden');
-            window.scrollTo(0, 0);
+            scrollToTop();
 
             let resultData = {};
 
-            // --- DÉFINITION DES PROFILS ---
-            if (totalScore <= 30) {
+            // --- DÉFINITION DES PROFILS (Textes améliorés) ---
+             if (totalScore <= 30) {
                 resultData = {
-                    category: "Usage Normal & Équilibré",
-                    badgeColor: "bg-green-500",
-                    headerBg: "bg-green-50",
-                    barColor: "bg-green-500",
+                    color: "green",
                     svg: resultSVGs.green,
+                    category: "Usage Équilibré",
+                    badgeClasses: "bg-green-100 text-green-800 border-green-200",
+                    bgClasses: "bg-green-50/50",
                     description: `
-                        <p><strong class="text-green-700">Constat :</strong> Votre score indique un contrôle excellent sur votre utilisation d'Internet. Le numérique est pour vous un outil pratique, qui n'empiète pas sur votre vie réelle, vos relations ou vos responsabilités.</p>
-                        <p><strong>Impact :</strong> Vous savez vous déconnecter sans ressentir de manque ou d'anxiété. Votre équilibre vie pro/vie perso/vie numérique est sain.</p>
-                        <p class="text-sm text-slate-500 italic">Conseil : Continuez ainsi. Gardez cette distance critique.</p>
+                        <p class="text-lg"><strong class="text-green-700 text-xl block mb-2">✨ Excellent contrôle.</strong> Vos réponses indiquent une relation saine et maîtrisée avec la technologie. Internet est pour vous un outil pratique qui n'empiète pas significativement sur votre vie réelle, vos relations ou vos responsabilités.</p>
+                        <div class="bg-green-50 p-4 rounded-xl border border-green-100 mt-4">
+                            <strong class="text-green-800 flex items-center mb-2"><i class="fas fa-lightbulb mr-2"></i>Le conseil du psy :</strong>
+                            <p class="text-green-700 text-sm">Continuez à cultiver vos activités hors ligne. Votre capacité à vous déconnecter sans anxiété est une force précieuse à préserver.</p>
+                        </div>
                     `
                 };
             } else if (totalScore <= 49) {
                 resultData = {
-                    category: "Dépendance Légère",
-                    badgeColor: "bg-yellow-500",
-                    headerBg: "bg-yellow-50",
-                    barColor: "bg-yellow-500",
+                    color: "yellow",
                     svg: resultSVGs.yellow,
+                    category: "Dépendance Légère",
+                    badgeClasses: "bg-yellow-100 text-yellow-800 border-yellow-200",
+                    bgClasses: "bg-yellow-50/50",
                     description: `
-                        <p><strong class="text-yellow-700">Constat :</strong> Vous présentez quelques signes d'un usage problématique. Vous passez parfois plus de temps que prévu en ligne, et cela peut occasionnellement retarder certaines tâches.</p>
-                        <p><strong>Impact :</strong> L'impact reste mineur et vous gardez généralement le contrôle. Cependant, le "temps d'écran" commence à grignoter sur d'autres activités.</p>
-                        <p class="text-sm text-slate-500 italic">Conseil : Soyez vigilant sur les moments où vous "scrollez" sans but. Fixez-vous des limites de temps douces.</p>
+                        <p class="text-lg"><strong class="text-yellow-700 text-xl block mb-2">⚠️ Vigilance requise.</strong> Vous présentez les premiers signes d'un usage problématique. Vous passez souvent plus de temps que prévu en ligne, et cela commence à "grignoter" occasionnellement sur vos tâches ou votre temps libre réel.</p>
+                        <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-100 mt-4">
+                            <strong class="text-yellow-800 flex items-center mb-2"><i class="fas fa-lightbulb mr-2"></i>Le conseil du psy :</strong>
+                            <p class="text-yellow-700 text-sm">C'est le bon moment pour réagir. Essayez de fixer des limites de temps douces (ex: pas d'écran 1h avant de dormir) pour éviter que ces habitudes ne s'installent.</p>
+                        </div>
                     `
                 };
             } else if (totalScore <= 79) {
                 resultData = {
-                    category: "Dépendance Modérée",
-                    badgeColor: "bg-orange-500",
-                    headerBg: "bg-orange-50",
-                    barColor: "bg-orange-500",
+                    color: "orange",
                     svg: resultSVGs.orange,
+                    category: "Dépendance Modérée",
+                    badgeClasses: "bg-orange-100 text-orange-800 border-orange-200",
+                    bgClasses: "bg-orange-50/50",
                     description: `
-                        <p><strong class="text-orange-700">Constat :</strong> Votre usage d'Internet entraîne des problèmes fréquents. Il est probable que vous ayez du mal à vous déconnecter, même quand vous le souhaitez, et que votre entourage vous en fasse la remarque.</p>
-                        <p><strong>Impact :</strong> Cela affecte votre productivité, votre sommeil ou vos relations sociales réelles. Le monde virtuel devient souvent prioritaire.</p>
-                        <p class="text-sm text-slate-500 italic">Conseil : Une prise de conscience est nécessaire. Identifiez les applications les plus chronophages et tentez des périodes de "détox" courtes.</p>
+                        <p class="text-lg"><strong class="text-orange-700 text-xl block mb-2">🛑 Impact significatif.</strong> Votre usage d'Internet entraîne des problèmes fréquents dans votre vie quotidienne. Vous avez probablement du mal à vous déconnecter même quand vous le souhaitez, et cela affecte votre productivité, votre sommeil ou vos relations.</p>
+                        <div class="bg-orange-50 p-4 rounded-xl border border-orange-100 mt-4">
+                            <strong class="text-orange-800 flex items-center mb-2"><i class="fas fa-lightbulb mr-2"></i>Le conseil du psy :</strong>
+                            <p class="text-orange-700 text-sm">Une prise de conscience est nécessaire. Identifiez vos "voleurs de temps" (réseaux, jeux...) et tentez des périodes de déconnexion volontaires (ex: un après-midi sans téléphone).</p>
+                        </div>
                     `
                 };
             } else {
                 resultData = {
-                    category: "Dépendance Sévère",
-                    badgeColor: "bg-red-600",
-                    headerBg: "bg-red-50",
-                    barColor: "bg-red-600",
+                    color: "red",
                     svg: resultSVGs.red,
+                    category: "Dépendance Sévère",
+                    badgeClasses: "bg-red-100 text-red-800 border-red-200 animate-pulse-slow",
+                    bgClasses: "bg-red-50/50",
                     description: `
-                        <p><strong class="text-red-700">Constat :</strong> Vos réponses indiquent une perte de contrôle significative. Internet occupe une place centrale et envahissante dans votre vie quotidienne et mentale (anticipation, manque).</p>
-                        <p><strong>Impact :</strong> Les conséquences négatives sont probablement importantes sur votre travail, vos études ou votre vie sociale et familiale. La déconnexion génère de l'anxiété.</p>
-                        <p class="text-sm text-slate-500 italic">Conseil : Il est fortement recommandé de consulter un professionnel de santé (psychologue, addictologue) pour en discuter.</p>
+                        <p class="text-lg"><strong class="text-red-700 text-xl block mb-2">🚨 Perte de contrôle.</strong> Vos résultats indiquent qu'Internet occupe une place centrale et envahissante dans votre vie. Les conséquences négatives sont importantes sur votre travail, vos études ou votre vie sociale. La déconnexion génère probablement de l'anxiété ou un manque.</p>
+                        <div class="bg-red-50 p-4 rounded-xl border border-red-100 mt-4">
+                            <strong class="text-red-800 flex items-center mb-2"><i class="fas fa-user-md mr-2"></i>Le conseil du psy :</strong>
+                            <p class="text-red-700 text-sm font-semibold">Ne restez pas seul face à cela. Il est fortement recommandé d'en parler à un professionnel de santé (psychologue, addictologue) pour vous aider à reprendre le contrôle.</p>
+                        </div>
                     `
                 };
             }
 
             // Update DOM with professional data
-            document.getElementById('final-score').innerText = totalScore;
+            const finalScoreElement = document.getElementById('final-score');
+            finalScoreElement.innerText = totalScore;
+            finalScoreElement.className = `text-6xl md:text-8xl font-black leading-none text-${resultData.color}-600`;
+
+            document.getElementById('result-category-badge-container').innerHTML = `
+                <span class="text-xl md:text-2xl font-black px-6 py-3 inline-block rounded-2xl shadow-sm border-2 ${resultData.badgeClasses}">
+                    ${resultData.category}
+                </span>
+            `;
             
-            const badge = document.getElementById('result-category-badge');
-            badge.innerText = resultData.category;
-            badge.className = `text-2xl md:text-3xl font-black text-white px-8 py-3 inline-block rounded-2xl shadow-lg relative z-10 ${resultData.badgeColor}`;
+            document.getElementById('result-header-bg').className = `p-8 md:p-10 text-center relative overflow-hidden transition-colors duration-1000 ${resultData.bgClasses}`;
             
-            document.getElementById('result-header-bg').className = `p-10 text-center relative overflow-hidden ${resultData.headerBg}`;
-            document.getElementById('result-description').innerHTML = resultData.description;
-            document.getElementById('result-description').className = `text-slate-700 leading-relaxed space-y-4 text-lg border-l-4 pl-6 py-2 border-${resultData.color}-500`;
+            const descriptionContainer = document.getElementById('result-description');
+            descriptionContainer.innerHTML = resultData.description;
+            descriptionContainer.className = `text-slate-700 leading-relaxed space-y-5 text-lg border-l-4 pl-6 py-2 transition-all duration-500 border-${resultData.color}-500`;
             
             document.getElementById('result-illustration-container').innerHTML = resultData.svg;
 
-            const bar = document.getElementById('score-bar');
-            bar.className = `absolute top-0 left-0 h-full transition-all duration-1500 ease-out rounded-full relative z-10 shadow-sm ${resultData.barColor}`;
+            // Animate Gauge marker
+            const markerContainer = document.getElementById('score-marker-container');
+            // Calculate percentage for the marker position (max score is 100)
+            let markerPosition = totalScore; 
+            // Small adjustment to keep marker within bounds at extremes
+            if (markerPosition < 2) markerPosition = 2;
+            if (markerPosition > 98) markerPosition = 98;
             
-            setTimeout(() => { bar.style.width = `${totalScore}%`; }, 300);
+            setTimeout(() => { markerContainer.style.width = `${markerPosition}%`; }, 500);
         }
 
         function shareResult() {
-            const text = `J'ai évalué mon équilibre numérique avec le test IAT. C'est un outil intéressant pour faire le point.`;
+            const text = `J'ai évalué mon équilibre numérique avec le test IAT. C'est un outil intéressant pour faire le point sur sa consommation.`;
             if (navigator.share) {
                 navigator.share({ title: 'CyberBalance Project - Test IAT', text: text, url: window.location.href })
                 .catch(console.error);
             } else {
-                prompt("Copiez ce lien pour partager l'outil :", window.location.href);
+                // Fallback plus propre
+                const tempInput = document.createElement("input");
+                tempInput.value = window.location.href;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+                alert("Le lien a été copié dans votre presse-papier !");
             }
         }
     </script>
+    <style>
+        /* Custom animations */
+        .animate-bounce-subtle { animation: bounceSubtle 2s infinite; }
+        @keyframes bounceSubtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .animate-pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .animate-pulse-subtle { animation: pulseSubtle 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+         @keyframes pulseSubtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+    </style>
 </body>
 </html>
