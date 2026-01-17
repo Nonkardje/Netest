@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Dépendance à Internet (IAT)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .option-btn.selected {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-wifi text-blue-600 text-xl"></i>
+                <h1 class="font-bold text-lg md:text-xl text-slate-800">Test IAT <span class="text-slate-400 font-normal text-sm hidden sm:inline">| Dr. Kimberly Young</span></h1>
+            </div>
+            <div class="text-sm text-slate-500" id="progress-indicator">Question 0/20</div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-2xl">
+        
+        <div id="welcome-screen" class="bg-white rounded-2xl shadow-lg p-8 text-center fade-in">
+            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-clipboard-check text-blue-600 text-3xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-4">Évaluez votre relation avec Internet</h2>
+            <p class="text-slate-600 mb-6 leading-relaxed">
+                Ce questionnaire de 20 questions mesure le niveau de dépendance à Internet. 
+                Il est utilisé mondialement pour aider à prendre conscience de ses habitudes numériques.
+            </p>
+            <div class="bg-blue-50 text-blue-800 p-4 rounded-lg text-sm mb-8 text-left">
+                <strong>Comment ça marche ?</strong><br>
+                Pour chaque question, répondez sur une échelle de 0 à 5, selon la fréquence à laquelle la situation se produit.
+            </div>
+            <button onclick="startTest()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition-all transform hover:scale-105 shadow-lg w-full sm:w-auto">
+                Commencer le test
+            </button>
+        </div>
+
+        <div id="quiz-container" class="hidden">
+            <div id="questions-wrapper"></div>
+            
+            <div class="mt-8 flex justify-between items-center">
+                <button id="prev-btn" onclick="prevQuestion()" class="text-slate-500 hover:text-slate-800 font-medium px-4 py-2 hidden">
+                    <i class="fas fa-arrow-left mr-2"></i> Précédent
+                </button>
+                <button id="next-btn" onclick="nextQuestion()" class="bg-slate-800 hover:bg-black text-white font-medium py-3 px-8 rounded-xl shadow-md ml-auto transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    Suivant <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+                <button id="finish-btn" onclick="calculateResult()" class="hidden bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-8 rounded-xl shadow-md ml-auto transition-colors">
+                    Voir mon résultat
+                </button>
+            </div>
+        </div>
+
+        <div id="result-screen" class="hidden fade-in">
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div id="score-header" class="p-8 text-center text-white bg-blue-600">
+                    <p class="text-blue-100 uppercase tracking-wider text-sm font-semibold mb-2">Votre Score IAT</p>
+                    <div class="text-6xl font-bold mb-2" id="final-score">0</div>
+                    <div class="text-xl font-medium opacity-90" id="result-category">Analyse en cours...</div>
+                </div>
+                
+                <div class="p-8">
+                    <div class="mb-8">
+                        <h3 class="font-bold text-slate-800 mb-3 flex items-center">
+                            <i class="fas fa-info-circle text-blue-500 mr-2"></i> Interprétation
+                        </h3>
+                        <p id="result-description" class="text-slate-600 leading-relaxed"></p>
+                    </div>
+
+                    <div class="relative h-4 bg-slate-200 rounded-full mb-2 overflow-hidden">
+                        <div id="score-bar" class="absolute top-0 left-0 h-full bg-blue-500 transition-all duration-1000 ease-out" style="width: 0%"></div>
+                    </div>
+                    <div class="flex justify-between text-xs text-slate-400 font-medium">
+                        <span>Normal (0-30)</span>
+                        <span>Léger (31-49)</span>
+                        <span>Modéré (50-79)</span>
+                        <span>Sévère (80-100)</span>
+                    </div>
+
+                    <div class="mt-10 pt-6 border-t border-slate-100 flex flex-col sm:flex-row gap-4">
+                        <button onclick="location.reload()" class="flex-1 py-3 px-4 border border-slate-300 rounded-lg text-slate-600 font-medium hover:bg-slate-50 transition-colors text-center">
+                            Refaire le test
+                        </button>
+                        <button onclick="shareResult()" class="flex-1 py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors text-center shadow-md">
+                            <i class="fas fa-share-alt mr-2"></i> Partager ce test
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-6 text-slate-400 text-sm">
+        <p>Basé sur le test du Dr. Kimberly S. Young</p>
+    </footer>
+
+    <script>
+        const questions = [
+            "À quelle fréquence constatez-vous que vous restez en ligne plus longtemps que prévu ?",
+            "À quelle fréquence négligez-vous les tâches ménagères pour passer plus de temps en ligne ?",
+            "À quelle fréquence préférez-vous l'excitation d'Internet à l'intimité avec votre partenaire ?",
+            "À quelle fréquence nouez-vous de nouvelles relations avec d'autres internautes ?",
+            "À quelle fréquence les autres se plaignent-ils du temps que vous passez en ligne ?",
+            "À quelle fréquence vos notes ou votre travail scolaire souffrent-ils du temps passé en ligne ?",
+            "À quelle fréquence consultez-vous vos e-mails avant de faire autre chose de nécessaire ?",
+            "À quelle fréquence votre productivité ou votre performance au travail souffre-t-elle à cause d'Internet ?",
+            "À quelle fréquence devenez-vous défensif ou secret lorsque quelqu'un vous demande ce que vous faites en ligne ?",
+            "À quelle fréquence bloquez-vous des pensées perturbantes de votre vie avec des pensées apaisantes liées à Internet ?",
+            "À quelle fréquence vous surprenez-vous à anticiper le moment où vous pourrez vous reconnecter ?",
+            "À quelle fréquence craignez-vous que la vie sans Internet soit ennuyeuse, vide et sans joie ?",
+            "À quelle fréquence craquez-vous, criez-vous ou vous énervez-vous si quelqu'un vous dérange pendant que vous êtes en ligne ?",
+            "À quelle fréquence perdez-vous du sommeil à cause d'Internet ?",
+            "À quelle fréquence vous sentez-vous préoccupé par Internet alors que vous êtes hors ligne, ou fantasmez-vous sur le fait d'être en ligne ?",
+            "À quelle fréquence vous dites-vous 'juste quelques minutes de plus' lorsque vous êtes en ligne ?",
+            "À quelle fréquence essayez-vous de réduire votre temps passé en ligne sans y parvenir ?",
+            "À quelle fréquence essayez-vous de cacher la durée de votre connexion ?",
+            "À quelle fréquence choisissez-vous de passer plus de temps en ligne plutôt que de sortir avec d'autres ?",
+            "À quelle fréquence vous sentez-vous déprimé, d'humeur changeante ou nerveux lorsque vous êtes hors ligne, sentiments qui disparaissent une fois de retour en ligne ?"
+        ];
+
+        const options = [
+            { val: 0, text: "Non applicable / Jamais" },
+            { val: 1, text: "Rarement" },
+            { val: 2, text: "Occasionnellement" },
+            { val: 3, text: "Fréquemment" },
+            { val: 4, text: "Souvent" },
+            { val: 5, text: "Toujours" }
+        ];
+
+        let currentQuestion = 0;
+        let answers = new Array(questions.length).fill(null);
+
+        function startTest() {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            renderQuestion();
+            updateProgress();
+        }
+
+        function renderQuestion() {
+            const wrapper = document.getElementById('questions-wrapper');
+            wrapper.innerHTML = '';
+
+            const qDiv = document.createElement('div');
+            qDiv.className = 'bg-white rounded-2xl shadow-sm p-6 md:p-8 fade-in';
+            
+            const qTitle = document.createElement('h3');
+            qTitle.className = 'text-xl font-bold text-slate-800 mb-6';
+            qTitle.innerText = `${currentQuestion + 1}. ${questions[currentQuestion]}`;
+            qDiv.appendChild(qTitle);
+
+            const optionsGrid = document.createElement('div');
+            optionsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = `option-btn w-full text-left px-4 py-3 rounded-lg border border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all ${answers[currentQuestion] === opt.val ? 'selected' : ''}`;
+                btn.onclick = () => selectOption(opt.val, btn);
+                
+                const flexDiv = document.createElement('div');
+                flexDiv.className = 'flex items-center text-left'; 
+                
+                const valSpan = document.createElement('span');
+                valSpan.className = 'val-badge mr-4 flex-shrink-0 w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-bold flex items-center justify-center';
+                valSpan.innerText = opt.val;
+
+                const textSpan = document.createElement('span');
+                textSpan.className = 'font-medium';
+                textSpan.innerText = opt.text;
+
+                if (answers[currentQuestion] === opt.val) {
+                    valSpan.className = 'val-badge mr-4 flex-shrink-0 w-8 h-8 rounded-full bg-white text-blue-600 font-bold flex items-center justify-center';
+                }
+
+                flexDiv.appendChild(valSpan);
+                flexDiv.appendChild(textSpan);
+                btn.appendChild(flexDiv);
+                optionsGrid.appendChild(btn);
+            });
+
+            qDiv.appendChild(optionsGrid);
+            wrapper.appendChild(qDiv);
+
+            updateButtons();
+        }
+
+        function selectOption(val, btnElement) {
+            answers[currentQuestion] = val;
+            
+            // Visual update
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => {
+                b.classList.remove('selected');
+                const badge = b.querySelector('.val-badge');
+                if (badge) {
+                    badge.className = 'val-badge mr-4 flex-shrink-0 w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-bold flex items-center justify-center';
+                }
+            });
+            
+            // Set active style
+            btnElement.classList.add('selected');
+            const selectedBadge = btnElement.querySelector('.val-badge');
+            if (selectedBadge) {
+                selectedBadge.className = 'val-badge mr-4 flex-shrink-0 w-8 h-8 rounded-full bg-white text-blue-600 font-bold flex items-center justify-center';
+            }
+
+            // Auto advance after short delay for better UX
+            setTimeout(() => {
+                if(currentQuestion < questions.length - 1) {
+                    nextQuestion();
+                } else {
+                    updateButtons(); // Show finish button
+                }
+            }, 300);
+        }
+
+        function nextQuestion() {
+            if (answers[currentQuestion] === null) return; // Prevent skipping
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                renderQuestion();
+                updateProgress();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion();
+                updateProgress();
+            }
+        }
+
+        function updateButtons() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const finishBtn = document.getElementById('finish-btn');
+
+            // Prev button visibility
+            if (currentQuestion === 0) prevBtn.classList.add('hidden');
+            else prevBtn.classList.remove('hidden');
+
+            // Next/Finish logic
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.classList.add('hidden');
+                finishBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                finishBtn.classList.add('hidden');
+                
+                // Disable next if no answer
+                if (answers[currentQuestion] === null) {
+                    nextBtn.disabled = true;
+                    nextBtn.classList.add('opacity-50');
+                } else {
+                    nextBtn.disabled = false;
+                    nextBtn.classList.remove('opacity-50');
+                }
+            }
+        }
+
+        function updateProgress() {
+            const indicator = document.getElementById('progress-indicator');
+            indicator.innerText = `Question ${currentQuestion + 1}/${questions.length}`;
+        }
+
+        function calculateResult() {
+            if (answers.some(a => a === null)) {
+                alert("Veuillez répondre à toutes les questions.");
+                return;
+            }
+
+            const totalScore = answers.reduce((a, b) => a + b, 0);
+            
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('header')?.setAttribute('style', 'display:none'); 
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            // Determine content
+            let category = "";
+            let description = "";
+            let colorClass = "";
+            let barWidth = totalScore + "%";
+
+            if (totalScore <= 30) {
+                category = "Usage Normal";
+                description = "Vos réponses indiquent un niveau normal d'utilisation d'Internet. Vous avez le contrôle sur votre consommation numérique.";
+                colorClass = "bg-green-500";
+            } else if (totalScore <= 49) {
+                category = "Dépendance Légère";
+                description = "Vous présentez un niveau léger de dépendance. Internet commence à avoir un impact occasionnel sur votre vie, mais vous gardez généralement le contrôle.";
+                colorClass = "bg-yellow-500";
+            } else if (totalScore <= 79) {
+                category = "Dépendance Modérée";
+                description = "Vous présentez une dépendance modérée. Internet cause des problèmes fréquents dans votre vie quotidienne ou vos relations. Une prise de conscience est nécessaire.";
+                colorClass = "bg-orange-500";
+            } else {
+                category = "Dépendance Sévère";
+                description = "Vos réponses indiquent une dépendance sévère. Internet a un impact significatif et négatif sur la plupart des aspects de votre vie. Il est recommandé de consulter un professionnel.";
+                colorClass = "bg-red-600";
+            }
+
+            // Update DOM
+            document.getElementById('final-score').innerText = totalScore;
+            document.getElementById('result-category').innerText = category;
+            document.getElementById('result-description').innerText = description;
+            
+            const header = document.getElementById('score-header');
+            header.className = `p-8 text-center text-white ${colorClass}`;
+            
+            const bar = document.getElementById('score-bar');
+            bar.className = `absolute top-0 left-0 h-full ${colorClass} transition-all duration-1000 ease-out`;
+            
+            // Trigger animation
+            setTimeout(() => {
+                bar.style.width = barWidth;
+            }, 100);
+        }
+
+        function shareResult() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Test IAT',
+                    text: 'Je viens de tester mon niveau de dépendance à Internet avec ce questionnaire interactif. Essaie aussi !',
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                alert("Copiez l'adresse de cette page pour la partager !");
+            }
+        }
+    </script>
+</body>
+</html>
